@@ -39,7 +39,7 @@ import requests
 from enum import Enum
 from typing import Dict, Optional, Callable
 from dotenv import load_dotenv
-from Confluence import MyConfluenceAPI
+from Modules.Confluence import MyConfluenceAPI
 
 
 # ---------------------------------------------------------------------------
