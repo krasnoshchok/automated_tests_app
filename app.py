@@ -2,18 +2,14 @@
 Automated Tests Command-Line Application
 
 This script provides a command-line interface for managing and testing different kinds of software.
-Users can navigate between pages, input app IDs, perform automated configuration checks, and
-retrieve application-related information from Confluence.
+Users can navigate between pages, input app IDs, perform different tasks
 
-It demonstrates a modular structure for test automation, environment-based configuration,
-and integration with external APIs (Confluence).
 
 Features:
 ---------
 - Command-line navigation between logical pages.
 - Fetch app details from a specified local folder.
 - Perform pre-execution validation tests.
-- Retrieve app-related information from Confluence.
 - Support for user input validation and error handling.
 
 Dependencies:
@@ -35,11 +31,9 @@ import re
 import sys
 import time
 import logging
-# import requests
 from enum import Enum
 from typing import Dict, Optional, Callable
 from dotenv import load_dotenv
-# from Modules.Confluence import MyConfluenceAPI
 
 
 # ---------------------------------------------------------------------------
@@ -58,8 +52,6 @@ load_dotenv()
 
 # Read environment variables
 APPS_FOLDER: Optional[str] = os.getenv('APPS_FOLDER')
-CONFLUENCE_API_KEY: Optional[str] = os.getenv('CONFLUENCE_API_KEY')
-CONFLUENCE_PAGE: Optional[str] = os.getenv('CONFLUENCE_PAGE')
 
 # Header message displayed in the console UI
 APP_HEADER: str = (
@@ -107,9 +99,7 @@ def validate_environment() -> None:
         ConfigError: If one or more required environment variables are missing.
     """
     required_vars = {
-        'APPS_FOLDER': APPS_FOLDER,
-        'CONFLUENCE_PAGE': CONFLUENCE_PAGE,
-        'CONFLUENCE_API_KEY': CONFLUENCE_API_KEY
+        'APPS_FOLDER': APPS_FOLDER
     }
 
     missing = [name for name, value in required_vars.items() if not value]
@@ -126,8 +116,6 @@ class AppForTests:
     Command-line application for managing and testing software components.
 
     This class handles user navigation, page rendering, and command processing.
-    It provides basic automation functionality like fetching Confluence data
-    and validating configuration files.
     """
 
     def __init__(self) -> None:
@@ -270,7 +258,6 @@ class AppForTests:
         """Handle commands in the TEST_AUTOMATION page."""
         if command == TestCommands.CONFLUENCE_CHECK.value:
             print("\nFetching Confluence Page Info...\n")
-            # self.check_app_confluence_page()
         elif command == TestCommands.CONFIG_VALIDATION.value:
             print("\nValidating configuration file...\n")
             self._validate_config_file()
@@ -280,37 +267,6 @@ class AppForTests:
     # -----------------------------------------------------------------------
     # FEATURE IMPLEMENTATIONS
     # -----------------------------------------------------------------------
-
-    # def check_app_confluence_page(self) -> None:
-    #     """
-    #     Retrieve and display Confluence page information for the chosen app.
-    #     """
-    #     if self.chosen_app is None:
-    #         print("No app selected.")
-    #         return
-    #
-    #     if self.chosen_app not in self.matching_folders:
-    #         print("Error: Selected app not found.")
-    #         return
-    #
-    #     app_id: str = extract_app_id(self.matching_folders[self.chosen_app])
-    #     if not app_id:
-    #         print("Error: Could not extract app ID from folder name.")
-    #         return
-    #
-    #     print(f"Checking Confluence page for app ID: {app_id}")
-    #
-    #     try:
-    #         # Initialize Confluence API client
-    #         # confluence_page = MyConfluenceAPI(CONFLUENCE_API_KEY, CONFLUENCE_PAGE, f"app_{app_id}")
-    #         # main_dev = confluence_page.get_main_developer()
-    #         print(f"Main Developer: {main_dev or 'Not found'}")
-    #     except requests.RequestException as e_req_exc:
-    #         logger.error(f"Network error while checking Confluence: {e_req_exc}")
-    #         print("Error: Could not connect to Confluence. Check your network connection.")
-    #     except Exception as e_unexp:
-    #         logger.error(f"Unexpected error checking Confluence page: {e_unexp}")
-    #         print("Error: Confluence Page cannot be checked. Check logs for details.")
 
     @staticmethod
     def _validate_config_file() -> None:
