@@ -35,11 +35,11 @@ import re
 import sys
 import time
 import logging
-import requests
+# import requests
 from enum import Enum
 from typing import Dict, Optional, Callable
 from dotenv import load_dotenv
-from Modules.Confluence import MyConfluenceAPI
+# from Modules.Confluence import MyConfluenceAPI
 
 
 # ---------------------------------------------------------------------------
@@ -73,7 +73,7 @@ APP_HEADER: str = (
 # ---------------------------------------------------------------------------
 
 class ConfigError(Exception):
-    """Raised when required configuration is missing."""
+    """Raised when the required configuration is missing."""
     pass
 
 
@@ -140,7 +140,7 @@ class AppForTests:
         self.commands: Dict[Pages, Callable[[str], None]] = {
             Pages.HOME: self.handle_home_commands,
             Pages.INPUT_APP_FOR_CONFIG_CHECK: self._handle_input_app_commands,
-            Pages.CHOOSE_PROPOSED_APP: self._handle_chooseapps_commands,
+            Pages.CHOOSE_PROPOSED_APP: self._handle_choose_apps_commands,
             Pages.TEST_AUTOMATION: self._handle_test_automation_commands
         }
 
@@ -159,8 +159,9 @@ class AppForTests:
         print(APP_HEADER)
 
         if self.current_page == Pages.HOME:
-            print("\nHello, this is your app.\n")
-            print("1 - Automated Test")
+            print("\nHello, this is your app.")
+            print("\nChoose what you want to do:")
+            print("\n1 - Automated Test\n")
 
         elif self.current_page == Pages.INPUT_APP_FOR_CONFIG_CHECK:
             print("\nWhich app would you like to test? Input the app number (id)\n")
@@ -257,7 +258,7 @@ class AppForTests:
         else:
             print(f"No folders found with app number ({command})")
 
-    def _handle_chooseapps_commands(self, command: str) -> None:
+    def _handle_choose_apps_commands(self, command: str) -> None:
         """Handle user selection of an app from the proposed list."""
         if command.isnumeric() and int(command) in self.matching_folders:
             self.chosen_app = int(command)
@@ -269,7 +270,7 @@ class AppForTests:
         """Handle commands in the TEST_AUTOMATION page."""
         if command == TestCommands.CONFLUENCE_CHECK.value:
             print("\nFetching Confluence Page Info...\n")
-            self.check_app_confluence_page()
+            # self.check_app_confluence_page()
         elif command == TestCommands.CONFIG_VALIDATION.value:
             print("\nValidating configuration file...\n")
             self._validate_config_file()
@@ -280,36 +281,36 @@ class AppForTests:
     # FEATURE IMPLEMENTATIONS
     # -----------------------------------------------------------------------
 
-    def check_app_confluence_page(self) -> None:
-        """
-        Retrieve and display Confluence page information for the chosen app.
-        """
-        if self.chosen_app is None:
-            print("No app selected.")
-            return
-
-        if self.chosen_app not in self.matching_folders:
-            print("Error: Selected app not found.")
-            return
-
-        app_id: str = extract_app_id(self.matching_folders[self.chosen_app])
-        if not app_id:
-            print("Error: Could not extract app ID from folder name.")
-            return
-
-        print(f"Checking Confluence page for app ID: {app_id}")
-
-        try:
-            # Initialize Confluence API client
-            confluence_page = MyConfluenceAPI(CONFLUENCE_API_KEY, CONFLUENCE_PAGE, f"app_{app_id}")
-            main_dev = confluence_page.get_main_developer()
-            print(f"Main Developer: {main_dev or 'Not found'}")
-        except requests.RequestException as e_req_exc:
-            logger.error(f"Network error while checking Confluence: {e_req_exc}")
-            print("Error: Could not connect to Confluence. Check your network connection.")
-        except Exception as e_unexp:
-            logger.error(f"Unexpected error checking Confluence page: {e_unexp}")
-            print("Error: Confluence Page cannot be checked. Check logs for details.")
+    # def check_app_confluence_page(self) -> None:
+    #     """
+    #     Retrieve and display Confluence page information for the chosen app.
+    #     """
+    #     if self.chosen_app is None:
+    #         print("No app selected.")
+    #         return
+    #
+    #     if self.chosen_app not in self.matching_folders:
+    #         print("Error: Selected app not found.")
+    #         return
+    #
+    #     app_id: str = extract_app_id(self.matching_folders[self.chosen_app])
+    #     if not app_id:
+    #         print("Error: Could not extract app ID from folder name.")
+    #         return
+    #
+    #     print(f"Checking Confluence page for app ID: {app_id}")
+    #
+    #     try:
+    #         # Initialize Confluence API client
+    #         # confluence_page = MyConfluenceAPI(CONFLUENCE_API_KEY, CONFLUENCE_PAGE, f"app_{app_id}")
+    #         # main_dev = confluence_page.get_main_developer()
+    #         print(f"Main Developer: {main_dev or 'Not found'}")
+    #     except requests.RequestException as e_req_exc:
+    #         logger.error(f"Network error while checking Confluence: {e_req_exc}")
+    #         print("Error: Could not connect to Confluence. Check your network connection.")
+    #     except Exception as e_unexp:
+    #         logger.error(f"Unexpected error checking Confluence page: {e_unexp}")
+    #         print("Error: Confluence Page cannot be checked. Check logs for details.")
 
     @staticmethod
     def _validate_config_file() -> None:
@@ -341,7 +342,7 @@ def clear_screen() -> None:
             if os.getenv('TERM'):
                 os.system('clear')
             else:
-                print("\n" * 5)  # just print some blank lines instead
+                print("\n" * 5)  # print some blank lines instead
     except Exception:
         print("\n" * 5)
 
