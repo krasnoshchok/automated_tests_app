@@ -1,6 +1,10 @@
 "# automated_tests_cmd_app" 
 
-This is just an example of an effective command line app. You can add here what ever features you need
+This is just an example of an effective command line app. 
+
+This is only the concept, enabling you to make automatic tests, simply by navigating within command line app.
+
+You can add here what ever features you need
 
 The app expects you to have your projects saved in the folder like:
 APPS_FOLDER=D:/input_folder
